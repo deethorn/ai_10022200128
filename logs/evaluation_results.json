@@ -1,0 +1,156 @@
+{
+  "rag_results": [
+    {
+      "query": "What is the theme of the 2025 budget statement?",
+      "expected_answer": "Resetting the Economy for the Ghana We Want",
+      "predicted_answer": "Resetting the Economy for the Ghana We Want",
+      "method": "rag",
+      "answer_source": "extractive_fallback",
+      "accuracy": 1,
+      "hallucination": 0,
+      "case_type": "normal"
+    },
+    {
+      "query": "Who won the 2020 Ghana presidential election?",
+      "expected_answer": "Nana Akufo Addo of the NPP",
+      "predicted_answer": "Nana Akufo Addo of the NPP",
+      "method": "rag",
+      "answer_source": "structured_csv",
+      "accuracy": 1,
+      "hallucination": 0,
+      "case_type": "normal"
+    },
+    {
+      "query": "What party does John Mahama belong to?",
+      "expected_answer": "NDC",
+      "predicted_answer": "NDC",
+      "method": "rag",
+      "answer_source": "structured_csv",
+      "accuracy": 1,
+      "hallucination": 0,
+      "case_type": "normal"
+    },
+    {
+      "query": "What was John Mahama's party in the 2020 election?",
+      "expected_answer": "NDC",
+      "predicted_answer": "NDC",
+      "method": "rag",
+      "answer_source": "structured_csv",
+      "accuracy": 1,
+      "hallucination": 0,
+      "case_type": "adversarial_ambiguous"
+    },
+    {
+      "query": "Who really won Ghana 2020? Give exact percentage too.",
+      "expected_answer": "Nana Akufo Addo of the NPP",
+      "predicted_answer": "Ghana won the 2024 African Amputee Football Cup of Nations tournament hosted and organised in Egypt from 18th to 30th May 2024 and won the trophy.",
+      "method": "rag",
+      "answer_source": "local_llm",
+      "accuracy": 0,
+      "hallucination": 1,
+      "case_type": "adversarial_misleading"
+    }
+  ],
+  "baseline_results": [
+    {
+      "query": "What is the theme of the 2025 budget statement?",
+      "expected_answer": "Resetting the Economy for the Ghana We Want",
+      "predicted_answer": "The 2025 budget statement is a comprehensive financial plan for the United States government, aimed at addressing the challenges of the COVID-19 pandemic. The statement outlines the government's efforts to reduce its budget deficit, increase revenue, and improve public services, including healthcare, education, and infrastructure.",
+      "method": "pure_llm",
+      "answer_source": "local_llm_only",
+      "accuracy": 0,
+      "hallucination": 1,
+      "case_type": "normal"
+    },
+    {
+      "query": "Who won the 2020 Ghana presidential election?",
+      "expected_answer": "Nana Akufo Addo of the NPP",
+      "predicted_answer": "The 2020 Ghana presidential election was won by the incumbent President, Kwame Nkrumah, who was re-elected with 53.3% of the vote.",
+      "method": "pure_llm",
+      "answer_source": "local_llm_only",
+      "accuracy": 0,
+      "hallucination": 1,
+      "case_type": "normal"
+    },
+    {
+      "query": "What party does John Mahama belong to?",
+      "expected_answer": "NDC",
+      "predicted_answer": "John Mahama belongs to the Democratic Party.",
+      "method": "pure_llm",
+      "answer_source": "local_llm_only",
+      "accuracy": 0,
+      "hallucination": 1,
+      "case_type": "normal"
+    },
+    {
+      "query": "What was John Mahama's party in the 2020 election?",
+      "expected_answer": "NDC",
+      "predicted_answer": "John Mahama's party in the 2020 election was the Democratic Party.",
+      "method": "pure_llm",
+      "answer_source": "local_llm_only",
+      "accuracy": 0,
+      "hallucination": 1,
+      "case_type": "adversarial_ambiguous"
+    },
+    {
+      "query": "Who really won Ghana 2020? Give exact percentage too.",
+      "expected_answer": "Nana Akufo Addo of the NPP",
+      "predicted_answer": "Ghana won the 2020 World Cup in Africa.",
+      "method": "pure_llm",
+      "answer_source": "local_llm_only",
+      "accuracy": 0,
+      "hallucination": 1,
+      "case_type": "adversarial_misleading"
+    }
+  ],
+  "consistency_results": [
+    {
+      "query": "What is the theme of the 2025 budget statement?",
+      "expected_answer": "Resetting the Economy for the Ghana We Want",
+      "rag_answers": [
+        "Resetting the Economy for the Ghana We Want",
+        "Resetting the Economy for the Ghana We Want",
+        "Resetting the Economy for the Ghana We Want"
+      ],
+      "pure_llm_answers": [
+        "The 2025 budget statement is a comprehensive financial plan for the United States government, aimed at addressing the challenges of the COVID-19 pandemic. The statement outlines the government's efforts to reduce its budget deficit, increase revenue, and improve public services, including healthcare, education, and infrastructure.",
+        "The 2025 budget statement is a comprehensive financial plan for the United States government, aimed at addressing the challenges of the COVID-19 pandemic. The statement outlines the government's efforts to reduce its budget deficit, increase revenue, and improve public services, including healthcare, education, and infrastructure.",
+        "The 2025 budget statement is a comprehensive financial plan for the United States government, aimed at addressing the challenges of the COVID-19 pandemic. The statement outlines the government's efforts to reduce its budget deficit, increase revenue, and improve public services, including healthcare, education, and infrastructure."
+      ],
+      "rag_consistency_score": 1.0,
+      "pure_llm_consistency_score": 1.0
+    },
+    {
+      "query": "Who won the 2020 Ghana presidential election?",
+      "expected_answer": "Nana Akufo Addo of the NPP",
+      "rag_answers": [
+        "Nana Akufo Addo of the NPP",
+        "Nana Akufo Addo of the NPP",
+        "Nana Akufo Addo of the NPP"
+      ],
+      "pure_llm_answers": [
+        "The 2020 Ghana presidential election was won by the incumbent President, Kwame Nkrumah, who was re-elected with 53.3% of the vote.",
+        "The 2020 Ghana presidential election was won by the incumbent President, Kwame Nkrumah, who was re-elected with 53.3% of the vote.",
+        "The 2020 Ghana presidential election was won by the incumbent President, Kwame Nkrumah, who was re-elected with 53.3% of the vote."
+      ],
+      "rag_consistency_score": 1.0,
+      "pure_llm_consistency_score": 1.0
+    },
+    {
+      "query": "What party does John Mahama belong to?",
+      "expected_answer": "NDC",
+      "rag_answers": [
+        "NDC",
+        "NDC",
+        "NDC"
+      ],
+      "pure_llm_answers": [
+        "John Mahama belongs to the Democratic Party.",
+        "John Mahama belongs to the Democratic Party.",
+        "John Mahama belongs to the Democratic Party."
+      ],
+      "rag_consistency_score": 1.0,
+      "pure_llm_consistency_score": 1.0
+    }
+  ]
+}
