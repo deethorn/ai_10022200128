@@ -1,9 +1,8 @@
+import re
 from typing import List, Dict
 
+
 def fixed_size_chunk_text(text: str, chunk_size: int = 500, overlap: int = 100) -> List[str]:
-    """
-    Split text into fixed-size character chunks with overlap.
-    """
     chunks = []
 
     if not text:
@@ -24,39 +23,64 @@ def fixed_size_chunk_text(text: str, chunk_size: int = 500, overlap: int = 100) 
     return chunks
 
 
-def paragraph_chunk_text(text: str, chunk_size: int = 500, overlap: int = 100) -> List[str]:
-    """
-    Split text by paragraph-like blocks first, then merge them into chunks.
-    If a block is too large, fall back to fixed-size chunking.
-    """
+def split_into_paragraphs(text: str) -> List[str]:
+    paragraphs = re.split(r"\n\s*\n", text)
+    paragraphs = [p.strip() for p in paragraphs if p.strip()]
+    return paragraphs
+
+
+def split_long_paragraph(paragraph: str, chunk_size: int, overlap: int) -> List[str]:
+    if len(paragraph) <= chunk_size:
+        return [paragraph]
+
+    sentences = re.split(r"(?<=[.!?])\s+", paragraph)
+    chunks = []
+    current = ""
+
+    for sentence in sentences:
+        candidate = f"{current} {sentence}".strip()
+        if len(candidate) <= chunk_size:
+            current = candidate
+        else:
+            if current:
+                chunks.append(current)
+
+            if len(sentence) > chunk_size:
+                chunks.extend(fixed_size_chunk_text(sentence, chunk_size, overlap))
+                current = ""
+            else:
+                current = sentence
+
+    if current:
+        chunks.append(current)
+
+    return chunks
+
+
+def paragraph_chunk_text(text: str, chunk_size: int = 700, overlap: int = 120) -> List[str]:
     if not text:
         return []
 
-    blocks = [block.strip() for block in text.split("  ") if block.strip()]
+    paragraphs = split_into_paragraphs(text)
 
-    if len(blocks) == 1:
-        # fallback if no clear paragraph blocks exist
-        blocks = [block.strip() for block in text.split(". ") if block.strip()]
-        blocks = [block + "." if not block.endswith(".") else block for block in blocks]
+    if not paragraphs:
+        return fixed_size_chunk_text(text, chunk_size, overlap)
 
     chunks = []
     current_chunk = ""
 
-    for block in blocks:
-        candidate = f"{current_chunk} {block}".strip()
+    for paragraph in paragraphs:
+        paragraph_parts = split_long_paragraph(paragraph, chunk_size, overlap)
 
-        if len(candidate) <= chunk_size:
-            current_chunk = candidate
-        else:
-            if current_chunk:
-                chunks.append(current_chunk)
+        for part in paragraph_parts:
+            candidate = f"{current_chunk}\n\n{part}".strip() if current_chunk else part
 
-            if len(block) > chunk_size:
-                split_blocks = fixed_size_chunk_text(block, chunk_size, overlap)
-                chunks.extend(split_blocks)
-                current_chunk = ""
+            if len(candidate) <= chunk_size:
+                current_chunk = candidate
             else:
-                current_chunk = block
+                if current_chunk:
+                    chunks.append(current_chunk)
+                current_chunk = part
 
     if current_chunk:
         chunks.append(current_chunk)
@@ -64,10 +88,7 @@ def paragraph_chunk_text(text: str, chunk_size: int = 500, overlap: int = 100) -
     return add_overlap_to_chunks(chunks, overlap)
 
 
-def add_overlap_to_chunks(chunks: List[str], overlap: int = 100) -> List[str]:
-    """
-    Add backward overlap between neighboring chunks.
-    """
+def add_overlap_to_chunks(chunks: List[str], overlap: int = 120) -> List[str]:
     if not chunks:
         return []
 
@@ -78,16 +99,13 @@ def add_overlap_to_chunks(chunks: List[str], overlap: int = 100) -> List[str]:
         current_chunk = chunks[i]
 
         overlap_text = previous_chunk[-overlap:] if len(previous_chunk) > overlap else previous_chunk
-        merged_chunk = f"{overlap_text} {current_chunk}".strip()
+        merged_chunk = f"{overlap_text}\n{current_chunk}".strip()
         overlapped_chunks.append(merged_chunk)
 
     return overlapped_chunks
 
 
 def chunk_document(doc: Dict, strategy: str = "fixed", chunk_size: int = 500, overlap: int = 100) -> List[Dict]:
-    """
-    Chunk a single document and preserve metadata.
-    """
     text = doc.get("text", "")
 
     if strategy == "fixed":
@@ -118,13 +136,24 @@ def chunk_document(doc: Dict, strategy: str = "fixed", chunk_size: int = 500, ov
 
 
 def chunk_documents(documents: List[Dict], strategy: str = "fixed", chunk_size: int = 500, overlap: int = 100) -> List[Dict]:
-    """
-    Chunk a list of documents.
-    """
     all_chunks = []
 
     for doc in documents:
-        doc_chunks = chunk_document(doc, strategy, chunk_size, overlap)
+        if doc.get("source_type") == "pdf":
+            doc_strategy = "paragraph" if strategy == "mixed" else strategy
+            doc_chunk_size = 700 if doc_strategy == "paragraph" else chunk_size
+            doc_overlap = 120 if doc_strategy == "paragraph" else overlap
+        else:
+            doc_strategy = "fixed"
+            doc_chunk_size = 500
+            doc_overlap = 100
+
+        doc_chunks = chunk_document(
+            doc,
+            strategy=doc_strategy,
+            chunk_size=doc_chunk_size,
+            overlap=doc_overlap
+        )
         all_chunks.extend(doc_chunks)
 
     return all_chunks

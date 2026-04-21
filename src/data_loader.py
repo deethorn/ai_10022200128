@@ -6,17 +6,11 @@ from src.config import CSV_FILE, PDF_FILE
 
 
 def load_csv_data(csv_path: Path = CSV_FILE):
-    """
-    Load the Ghana Election Result CSV and convert each row to a text document.
-    Returns a list of dictionaries.
-    """
     df = pd.read_csv(csv_path)
-
     documents = []
 
     for i, row in df.iterrows():
         row_text_parts = []
-
         for column in df.columns:
             value = row[column]
             row_text_parts.append(f"{column}: {value}")
@@ -35,15 +29,14 @@ def load_csv_data(csv_path: Path = CSV_FILE):
 
 
 def load_pdf_data(pdf_path: Path = PDF_FILE):
-    """
-    Load the 2025 Budget Statement PDF page by page.
-    Returns a list of dictionaries.
-    """
     reader = PdfReader(str(pdf_path))
     documents = []
 
     for i, page in enumerate(reader.pages):
-        page_text = page.extract_text()
+        try:
+            page_text = page.extract_text(extraction_mode="layout")
+        except TypeError:
+            page_text = page.extract_text()
 
         if page_text is None:
             page_text = ""
@@ -63,10 +56,6 @@ def load_pdf_data(pdf_path: Path = PDF_FILE):
 
 
 def load_all_documents():
-    """
-    Load both CSV and PDF documents into one list.
-    """
     csv_docs = load_csv_data()
     pdf_docs = load_pdf_data()
-
     return csv_docs + pdf_docs

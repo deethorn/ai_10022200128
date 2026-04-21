@@ -186,7 +186,7 @@ def prepare_data():
     cleaned_docs = clean_documents(docs)
     chunks = chunk_documents(
         cleaned_docs,
-        strategy="fixed",
+        strategy="mixed",
         chunk_size=500,
         overlap=100
     )
