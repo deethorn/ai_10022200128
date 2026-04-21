@@ -4,6 +4,19 @@ from src.prompt_builder import build_rag_prompt, format_context
 from src.structured_qa import answer_structured_query
 
 
+GENERIC_BUDGET_PATTERNS = [
+    "available for public access",
+    "to purchase a physical copy",
+    "public relations office",
+    "electronic copies can be"
+]
+
+
+def is_generic_budget_chunk(text: str) -> bool:
+    text_lower = text.lower()
+    return any(pattern in text_lower for pattern in GENERIC_BUDGET_PATTERNS)
+
+
 def extract_budget_theme(retrieved_chunks: list):
     for chunk in retrieved_chunks:
         text = chunk.get("text", "")
@@ -60,6 +73,40 @@ def run_rag_pipeline(query: str, embedder, chunk_embeddings, chunk_docs, llm, to
             "answer_source": "low_confidence_retrieval"
         }
 
+    structured = answer_structured_query(query)
+    if structured:
+        return {
+            "query": query,
+            "retrieved_chunks": retrieved_chunks,
+            "selected_context": "",
+            "final_prompt": "",
+            "final_answer": structured["answer"],
+            "answer_source": structured["source"]
+        }
+
+    top_text = first_result.get("text", "")
+    top_score = first_result.get("final_score", 0.0)
+
+    if is_generic_budget_chunk(top_text) and "budget" in query.lower():
+        return {
+            "query": query,
+            "retrieved_chunks": retrieved_chunks,
+            "selected_context": "",
+            "final_prompt": "",
+            "final_answer": "I could not find a specific answer in the provided budget context.",
+            "answer_source": "generic_chunk_blocked"
+        }
+
+    if top_score < 0.45:
+        return {
+            "query": query,
+            "retrieved_chunks": retrieved_chunks,
+            "selected_context": "",
+            "final_prompt": "",
+            "final_answer": "I could not find enough relevant evidence in the provided documents.",
+            "answer_source": "low_confidence_retrieval"
+        }
+
     selected_context = format_context(
         chunks=retrieved_chunks,
         max_chunks=2,
@@ -73,13 +120,9 @@ def run_rag_pipeline(query: str, embedder, chunk_embeddings, chunk_docs, llm, to
         max_characters=1200
     )
 
-    structured = answer_structured_query(query)
     extracted_answer = extract_direct_answer(query, retrieved_chunks)
 
-    if structured:
-        final_answer = structured["answer"]
-        answer_source = structured["source"]
-    elif extracted_answer:
+    if extracted_answer:
         final_answer = extracted_answer
         answer_source = "extractive_fallback"
     else:
