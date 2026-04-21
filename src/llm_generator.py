@@ -9,14 +9,16 @@ class LLMGenerator:
             model=model_name
         )
 
-    def generate_answer(self, prompt: str, max_new_tokens: int = 80) -> str:
-        """
-        Generate an answer locally using a Hugging Face instruct model.
-        """
+    def generate_answer(self, prompt: str, max_new_tokens: int = 60) -> str:
         messages = [
             {
                 "role": "system",
-                "content": "You are a careful academic assistant. Use only the provided context and answer briefly."
+                "content": (
+                    "You are a careful academic assistant. "
+                    "Use only the provided context. "
+                    "If the answer is not in the context, say exactly: "
+                    "'I could not find the answer in the provided documents.'"
+                )
             },
             {
                 "role": "user",

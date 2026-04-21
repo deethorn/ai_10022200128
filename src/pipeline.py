@@ -3,9 +3,10 @@ from src.retriever import retrieve_top_k
 from src.prompt_builder import build_rag_prompt, format_context
 from src.structured_qa import answer_structured_query
 
+
 def extract_budget_theme(retrieved_chunks: list):
     for chunk in retrieved_chunks:
-        text = chunk["text"]
+        text = chunk.get("text", "")
         match = re.search(
             r"(Resetting The Economy For The Ghana We Want|Resetting the Economy for the Ghana We Want)",
             text,
@@ -37,6 +38,28 @@ def run_rag_pipeline(query: str, embedder, chunk_embeddings, chunk_docs, llm, to
         use_expansion=True
     )
 
+    first_result = retrieved_chunks[0] if retrieved_chunks else {}
+
+    if first_result.get("status") == "needs_clarification":
+        return {
+            "query": query,
+            "retrieved_chunks": retrieved_chunks,
+            "selected_context": "",
+            "final_prompt": "",
+            "final_answer": first_result["message"],
+            "answer_source": "clarification_needed"
+        }
+
+    if first_result.get("status") == "low_confidence":
+        return {
+            "query": query,
+            "retrieved_chunks": retrieved_chunks,
+            "selected_context": "",
+            "final_prompt": "",
+            "final_answer": first_result["message"],
+            "answer_source": "low_confidence_retrieval"
+        }
+
     selected_context = format_context(
         chunks=retrieved_chunks,
         max_chunks=2,
@@ -62,6 +85,10 @@ def run_rag_pipeline(query: str, embedder, chunk_embeddings, chunk_docs, llm, to
     else:
         final_answer = llm.generate_answer(final_prompt)
         answer_source = "local_llm"
+
+    if not final_answer or final_answer.strip() == "":
+        final_answer = "I could not find the answer in the provided documents."
+        answer_source = "safe_fallback"
 
     return {
         "query": query,

@@ -1,15 +1,14 @@
-
 def format_context(chunks: list, max_chunks: int = 2, max_characters: int = 1200) -> str:
-    """
-    Select and format the best chunks into one context block.
-    Keep context short for small local models.
-    """
     selected_chunks = chunks[:max_chunks]
 
     context_parts = []
     current_length = 0
 
     for i, chunk in enumerate(selected_chunks, start=1):
+        chunk_text = chunk.get("text", "").strip()
+        if not chunk_text:
+            continue
+
         source_label = f"Source {i}"
         source_type = chunk.get("source_type", "unknown")
         source_name = chunk.get("source_name", "unknown")
@@ -19,8 +18,6 @@ def format_context(chunks: list, max_chunks: int = 2, max_characters: int = 1200
             location = f", page {chunk['page_number']}"
         elif chunk.get("row_number") is not None:
             location = f", row {chunk['row_number']}"
-
-        chunk_text = chunk["text"].strip()
 
         block = (
             f"{source_label} [{source_type}: {source_name}{location}]\n"
@@ -37,14 +34,14 @@ def format_context(chunks: list, max_chunks: int = 2, max_characters: int = 1200
 
 
 def build_rag_prompt(query: str, retrieved_chunks: list, max_chunks: int = 2, max_characters: int = 1200) -> str:
-    """
-    Build a grounded RAG prompt with stronger hallucination control.
-    """
     context = format_context(
         chunks=retrieved_chunks,
         max_chunks=max_chunks,
         max_characters=max_characters
     )
+
+    if not context.strip():
+        context = "No reliable context was retrieved."
 
     prompt = f"""
 You are an academic RAG assistant.
@@ -54,9 +51,9 @@ Answer the question using ONLY the context below.
 Important rules:
 - Do not use outside knowledge.
 - Do not guess.
-- If the answer is present in the context, copy the exact fact in your own words.
-- If the answer is not present, say: I could not find the answer in the provided documents.
-- Give only a short direct answer.
+- If the answer is present in the context, answer briefly and directly.
+- If the answer is not present, say exactly: I could not find the answer in the provided documents.
+- Do not explain beyond the evidence.
 
 Question:
 {query}
@@ -71,9 +68,6 @@ Direct Answer:
 
 
 def build_baseline_prompt(query: str) -> str:
-    """
-    Build a simple baseline prompt without retrieved context.
-    """
     prompt = f"""
 Answer the following question clearly and briefly.
 
