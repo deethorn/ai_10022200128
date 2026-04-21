@@ -78,6 +78,15 @@ This reduced hallucinations and improved factual accuracy.
 ## Limitations
 The system still struggles with misleading or vague questions if they are not matched by structured rules.
 
+## test questions
+**What is the theme of the 2025 budget statement?**
+
+**What party does Nana Akufo Addo belong to?**
+
+**Who won the 2020 Ghana presidential election?**
+
+**What was John Mahama's party in the 2020 election?**
+
 ## Author
 Chizota Diamond Chizzy  
 10022200128
