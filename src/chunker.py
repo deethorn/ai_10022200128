@@ -57,7 +57,7 @@ def split_long_paragraph(paragraph: str, chunk_size: int, overlap: int) -> List[
     return chunks
 
 
-def paragraph_chunk_text(text: str, chunk_size: int = 700, overlap: int = 120) -> List[str]:
+def paragraph_chunk_text(text: str, chunk_size: int = 1000, overlap: int = 200) -> List[str]:
     if not text:
         return []
 
@@ -88,7 +88,7 @@ def paragraph_chunk_text(text: str, chunk_size: int = 700, overlap: int = 120) -
     return add_overlap_to_chunks(chunks, overlap)
 
 
-def add_overlap_to_chunks(chunks: List[str], overlap: int = 120) -> List[str]:
+def add_overlap_to_chunks(chunks: List[str], overlap: int = 200) -> List[str]:
     if not chunks:
         return []
 
@@ -141,8 +141,8 @@ def chunk_documents(documents: List[Dict], strategy: str = "fixed", chunk_size: 
     for doc in documents:
         if doc.get("source_type") == "pdf":
             doc_strategy = "paragraph" if strategy == "mixed" else strategy
-            doc_chunk_size = 700 if doc_strategy == "paragraph" else chunk_size
-            doc_overlap = 120 if doc_strategy == "paragraph" else overlap
+            doc_chunk_size = 1000 if doc_strategy == "paragraph" else chunk_size
+            doc_overlap = 200 if doc_strategy == "paragraph" else overlap
         else:
             doc_strategy = "fixed"
             doc_chunk_size = 500
