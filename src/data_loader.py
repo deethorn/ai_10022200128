@@ -1,6 +1,3 @@
-# Student: Chizota Diamond Chizzy
-# Index Number: 10022200128
-
 from pathlib import Path
 import pandas as pd
 from pypdf import PdfReader

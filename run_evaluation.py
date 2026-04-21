@@ -1,6 +1,3 @@
-# Student: Chizota Diamond Chizzy
-# Index Number: 10022200128
-
 import os
 from src.data_loader import load_all_documents
 from src.cleaner import clean_documents

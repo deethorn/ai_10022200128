@@ -1,7 +1,3 @@
-# app.py
-# Student: Chizota Diamond Chizzy
-# Index Number: 10022200128
-
 import json
 import streamlit as st
 
@@ -14,7 +10,7 @@ from src.pipeline import run_rag_pipeline
 
 
 st.set_page_config(
-    page_title="Academic City RAG Chatbot",
+    page_title="ACity RAG Chatbot",
     page_icon="assets/logo.svg",
     layout="wide"
 )
@@ -241,7 +237,7 @@ def main():
     st.sidebar.subheader("Project Info")
     st.sidebar.write("**Name:** Chizota Diamond Chizzy")
     st.sidebar.write("**Index:** 10022200128")
-    st.sidebar.write("**Mode:** Manual RAG")
+    st.sidebar.write("**Mode:** RAG")
     st.sidebar.write("**LLM:** SmolLM2-135M-Instruct")
 
     st.sidebar.markdown("---")
@@ -258,15 +254,13 @@ def main():
     with col2:
         st.markdown("""
         <div class="hero-card">
-            <div class="hero-title">Academic City RAG Chatbot</div>
+            <div class="hero-title">ACity RAG Chatbot</div>
             <p class="hero-sub">
-                A manual Retrieval-Augmented Generation system built with Python and Streamlit
-                for Ghana Election CSV and 2025 Budget PDF question answering.
+                A Retrieval-Augmented Generation system for Ghana Election and 2025 Budget question answering.
             </p>
             <p class="hero-sub">
                 <strong>Student:</strong> Chizota Diamond Chizzy |
-                <strong>Index:</strong> 10022200128 |
-                <strong>Repo:</strong> ai_10022200128
+                <strong>Index:</strong> 10022200128
             </p>
         </div>
         """, unsafe_allow_html=True)
@@ -310,7 +304,7 @@ def main():
     st.markdown('<div class="section-space"></div>', unsafe_allow_html=True)
 
     st.markdown(
-        '<p class="small-note">Ask a question about the Ghana Election CSV or the 2025 Budget PDF.</p>',
+        '<p class="small-note">Ask a question about the Ghana Election or the 2025 Budget.</p>',
         unsafe_allow_html=True
     )
 

@@ -1,7 +1,3 @@
-# src/embedder.py
-# Student: Chizota Diamond Chizzy
-# Index Number: 10022200128
-
 from sentence_transformers import SentenceTransformer
 import numpy as np
 

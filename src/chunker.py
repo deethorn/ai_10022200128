@@ -1,6 +1,3 @@
-# Student: Chizota Diamond Chizzy
-# Index Number: 10022200128
-
 from typing import List, Dict
 
 def fixed_size_chunk_text(text: str, chunk_size: int = 500, overlap: int = 100) -> List[str]:

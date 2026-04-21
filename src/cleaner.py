@@ -1,6 +1,3 @@
-# Student: Chizota Diamond Chizzy
-# Index Number: 10022200128
-
 import re
 
 def clean_text(text: str) -> str:

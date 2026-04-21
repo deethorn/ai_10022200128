@@ -1,6 +1,3 @@
-# Student: Chizota Diamond Chizzy
-# Index Number: 10022200128
-
 import pandas as pd
 from src.config import CSV_FILE
 

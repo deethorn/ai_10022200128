@@ -1,6 +1,3 @@
-# src/prompt_builder.py
-# Student: Chizota Diamond Chizzy
-# Index Number: 10022200128
 
 def format_context(chunks: list, max_chunks: int = 2, max_characters: int = 1200) -> str:
     """

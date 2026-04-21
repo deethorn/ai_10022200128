@@ -1,6 +1,3 @@
-# Student: Chizota Diamond Chizzy
-# Index Number: 10022200128
-
 import json
 from src.prompt_builder import build_baseline_prompt
 from src.pipeline import run_rag_pipeline
