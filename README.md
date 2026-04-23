@@ -1,8 +1,7 @@
-# Academic City RAG Chatbot
+# ACity RAG Chatbot
 
 **Name:** Chizota Diamond Chizzy  
 **Index Number:** 10022200128  
-**Repository Name:** ai_10022200128  
 
 ## Project Overview
 This project is a Retrieval-Augmented Generation (RAG) chatbot built for Academic City using only Python and Streamlit. It answers questions based on two provided datasets:
@@ -78,7 +77,7 @@ This reduced hallucinations and improved factual accuracy.
 ## Limitations
 The system still struggles with misleading or vague questions if they are not matched by structured rules.
 
-## test questions
+## Test questions
 **What is the theme of the 2025 budget statement?**
 
 **What party does Nana Akufo Addo belong to?**
@@ -87,6 +86,6 @@ The system still struggles with misleading or vague questions if they are not ma
 
 **What was John Mahama's party in the 2020 election?**
 
-## Author
-Chizota Diamond Chizzy  
-10022200128
+**What does the 2025 Budget Statement say about the energy sector?**
+
+**Did the 2025 Budget Statement remove all taxes for Ghanaians?**
