@@ -1,3 +1,6 @@
+#Name: Chizota Diamond Chizzy
+#Index Number: 10022200128
+
 from src.data_loader import load_csv_data, load_pdf_data, load_all_documents
 
 csv_docs = load_csv_data()
