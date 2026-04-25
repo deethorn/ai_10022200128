@@ -1,3 +1,6 @@
+#Name: Chizota Diamond Chizzy
+#Index Number: 10022200128
+
 import re
 from src.retriever import retrieve_top_k
 from src.prompt_builder import build_rag_prompt, format_context
