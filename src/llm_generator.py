@@ -1,3 +1,6 @@
+#Name: Chizota Diamond Chizzy
+#Index Number: 10022200128
+
 from transformers import pipeline
 
 
